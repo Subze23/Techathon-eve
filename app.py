@@ -1,11 +1,11 @@
-import time
+import re
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@127.0.0.1:9906/demo'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:MYSQL_ROOT_PASSWORD@127.0.0.1:9906/demo'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.config['MAIL_SERVER']='smtp.gmail.com'
@@ -38,12 +38,14 @@ def hello_world():
 @app.route('/signup', methods=["POST", "GET"])
 def signup_page():
     if ( request.method == "POST" ):
-        new_user = Users(request.form['username'], request.form['email'], request.form['password'])
-        db.session.add(new_user)
-        db.session.commit()
+        email = request.form['email']
+        if ( re.search(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", email) ):
+            new_user = Users(request.form['username'], email, request.form['password'])
+            db.session.add(new_user)
+            db.session.commit()
+            return render_template("login.html")
         #return '<h2>Success!!!</h2>'    
         #time.sleep(3)
-        return render_template("login.html")    
     return render_template("signup.html")
 
 @app.route('/login', methods=["POST", "GET"])
@@ -54,8 +56,15 @@ def login_page():
             return "<h2>Welcome to Tech-A-Thon!!!</h2>"
     return render_template("login.html")
 
-@app.route('/forgot-password')
+@app.route('/forgot-password', methods=["POST", "GET"])
 def forgot_password_page():
+    if ( request.method == "POST" ):
+        print(request.form)
+        return f"<p>HIii</p>"
+        if ( re.search(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", email) ):
+            user = Users.query.filter_by(email=request.form['username']).first()
+        else:
+            pass
     return render_template("forgot.html")
 
 #test

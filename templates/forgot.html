@@ -4,22 +4,23 @@
     <meta charset="utf-8">
     <title>Forgot Password</title>
     <link rel="stylesheet" href="../static/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   </head>
   <body>
     <div class="center">
       <h1>Forgot password</h1>
       <form method="post">
         <div class="txt_field">
-          <input type="text" required>
+          <input type="text" id="name" required>
           <span></span>
           <label>Username or Email</label>
         </div>
-        <div id="otp" class="txt_field">
-            <input type="text" required>
+        <div id="otp" name="otp" class="txt_field">
+            <input type="text">
             <span></span>
             <label>OTP</label>
           </div>
-        <input type="submit" onclick="otp()" value="Send verification email">
+        <input type="button" id="submit" onclick="otp()" value="Send verification email">
         <div class="link">
           Remembered your password..? <a href="/login">Login</a>
         </div>
@@ -27,7 +28,17 @@
     </div>
     <script>
         function otp() {
-            document.getElementById("otp").style.display = 'block';
+            let otp = document.getElementById("otp");
+            otp.style.display = 'block';
+            $.post("/forgot-password",
+    {
+      name: document.getElementById('name').value,
+      city: "Duckburg"
+    },
+    function(data,status){
+      alert("Data: " + data + "\nStatus: " + status);
+    });
+    document.getElementById('submit').setAttribute('type',"submit");
         }
     </script>
   </body>

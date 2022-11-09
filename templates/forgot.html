@@ -38,14 +38,13 @@
           }
           $.post("/forgot-password", data,
             function(data,status){
-              console.log("ADS" + flag + status + typeof(status));
               if ( !flag && status == "nocontent" ) {
                 otpField.style.display = 'block';
                 document.getElementById("otp-inp").setAttribute("name", "otp");
-                document.getElementById('submit').setAttribute('type',"submit");
-                document.getElementById('submit').value = "Verify OTP";
-              } else {
-                ;
+                let subBtn = document.getElementById('submit');
+                subBtn.setAttribute('type',"submit");
+                subBtn.value = "Verify OTP";
+                subBtn.setAttribute("onclick", "");
               }
           });
         }

@@ -21,6 +21,7 @@ body{
   background: white;
   border-radius: 10px;
   box-shadow: 10px 10px 15px rgba(0,0,0,0.05);
+  
 }
 .center h1{
   text-align: center;
@@ -93,13 +94,14 @@ input[type="submit"], input[type="button"]{
   font-weight: 700;
   cursor: pointer;
   outline: none;
+  margin-bottom: 20px;
 }
 input[type="submit"]:hover, input[type="button"]:hover{
   border-color: #2691d9;
   transition: .5s;
 }
 .link{
-  margin: 30px 0;
+  margin-bottom: 20px;
   text-align: center;
   font-size: 16px;
   color: #666666;

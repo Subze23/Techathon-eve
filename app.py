@@ -1,11 +1,17 @@
 import re
-from flask import Flask, render_template, request
+import random
+from flask import Flask, render_template, request, session
+from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:MYSQL_ROOT_PASSWORD@127.0.0.1:9906/demo'
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@127.0.0.1:9906/demo'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.config['MAIL_SERVER']='smtp.gmail.com'
@@ -60,12 +66,30 @@ def login_page():
 def forgot_password_page():
     if ( request.method == "POST" ):
         print(request.form)
-        return f"<p>HIii</p>"
+        if ( 'otp' in request.form ):
+            #if ( 'tries' not in session ): session['tries'] = 3
+            #if ( session['tries'] == 0 ): return render_template("login.html")
+            recv_otp = request.form['otp']
+            print("RECV_OTP =", recv_otp)
+            print("OTP =", session['otp'])
+            if ( int(recv_otp) == session['otp'] ):
+                return "<h2>Success</h2>"
+            else:
+                #session['tries'] -= 1
+                return ('', 204)    
+        else:
+            session['otp'] = random.randint(100000, 999999)
+            print("OTP =", session['otp'])
+            return ('', 204)
+        #print(request.form['name']
+
+        '''return f"<p>HIii</p>"
         if ( re.search(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", email) ):
             user = Users.query.filter_by(email=request.form['username']).first()
         else:
-            pass
-    return render_template("forgot.html")
+            pass'''
+    else:
+        return render_template("forgot.html")
 
 #test
 @app.route('/create')

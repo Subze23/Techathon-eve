@@ -16,29 +16,38 @@
           <label>Username or Email</label>
         </div>
         <div id="otp" name="otp" class="txt_field">
-            <input type="text">
+            <input type="text" id="otp-inp">
             <span></span>
             <label>OTP</label>
           </div>
-        <input type="button" id="submit" onclick="otp()" value="Send verification email">
+        <input type="button" id="submit" onclick="otpSend()" value="Send verification email">
         <div class="link">
           Remembered your password..? <a href="/login">Login</a>
         </div>
       </form>
     </div>
     <script>
-        function otp() {
-            let otp = document.getElementById("otp");
-            otp.style.display = 'block';
-            $.post("/forgot-password",
-    {
-      name: document.getElementById('name').value,
-      city: "Duckburg"
-    },
-    function(data,status){
-      alert("Data: " + data + "\nStatus: " + status);
-    });
-    document.getElementById('submit').setAttribute('type',"submit");
+        function otpSend() {
+          let otpField = document.getElementById("otp");
+          let data = null;
+          let flag = false;
+          if ( !flag ) {
+            data = {name: document.getElementById('name').value, otp: otpField.value };
+          } else {
+            data = {name: document.getElementById('name').value};
+          }
+          $.post("/forgot-password", data,
+            function(data,status){
+              console.log("ADS" + flag + status + typeof(status));
+              if ( !flag && status == "nocontent" ) {
+                otpField.style.display = 'block';
+                document.getElementById("otp-inp").setAttribute("name", "otp");
+                document.getElementById('submit').setAttribute('type',"submit");
+                document.getElementById('submit').value = "Verify OTP";
+              } else {
+                ;
+              }
+          });
         }
     </script>
   </body>
